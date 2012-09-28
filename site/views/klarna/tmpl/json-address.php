@@ -1,11 +1,11 @@
 <?php
 /**
- * Description of Payhub View
+ * Description of Klarna View
  *
  * @version  1.0
  * @author Daniel Eliasson Stilero Webdesign http://www.stilero.com
  * @copyright  (C) 2012-sep-28 Stilero Webdesign, Stilero AB
- * @category Components
+ * @category Plugins
  * @license	GPLv2
  * 
  * Joomla! is free software. This version may have been modified pursuant
@@ -13,42 +13,29 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * 
- * This file is part of viev.html.
+ * This file is part of default.
  * 
- * Payhub View is free software: you can redistribute it and/or modify
+ * Klarna View is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Payhub View is distributed in the hope that it will be useful,
+ * Klarna View is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Payhub View.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Klarna View.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
 
-// No direct access to this file
+// no direct access
 defined('_JEXEC') or die('Restricted access');
- 
-// import Joomla view library
-jimport('joomla.application.component.view');
-require_once JPATH_COMPONENT.DS.'helpers'.DS.'PayhubHelper.php';
- 
-/**
- * HTML View class for the HelloWorld Component
- */
-class PayhubViewPayhub extends JView{
-    // Overwriting JView display method
-    function display($tpl = null){
-        PayhubHelper::addBootstrapCSS();
-        PayhubHelper::addJqueryJS();
-        PayhubHelper::addBootstrapJS();
-        PayhubHelper::addAdressJS();
-
-        // Display the view
-        parent::display($tpl);
-    }
+//$adresses = array_map('mb_convert_encoding', $this->adress, array('UTF-8', 'ISO-8859-1'));
+$adresses = array();
+foreach ( $this->adress as $key => $value) {
+    $adresses[$key] = mb_convert_encoding($value, 'UTF-8');
 }
+echo json_encode($this->adress);
+?>

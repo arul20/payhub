@@ -53,4 +53,13 @@ class PayhubViewKlarna extends JView
             // Display the view
             parent::display($tpl);
 	}
+        
+        function displayPayment($tpl = null){
+            require_once JPATH_COMPONENT.DS.'helpers'.DS.'PayhubHelper.php';
+            $model =& $this->getModel();
+            $adresses = $model->getAdress('410321-9202');
+            $this->adresses = $adresses;
+            // Display the view
+            parent::display($tpl);
+        }
 }

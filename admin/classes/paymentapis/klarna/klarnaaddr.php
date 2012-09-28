@@ -597,7 +597,7 @@ class KlarnaAddr
             'lname' => $this->getLastName(),
             'company' => $this->getCompanyName(),
             'careof' => $this->getCareof(),
-            'street' => $this->getStreet(),
+            'street' => mb_convert_encoding($this->getStreet(),'UTF-8'), 
             'house_number' => $this->getHouseNumber(),
             'house_extension' => $this->getHouseExt(),
             'zip' => $this->getZipCode(),

@@ -1,6 +1,7 @@
 <?php
 /**
- * Description of Payhub View
+ * Description of Klarna
+ * we View
  *
  * @version  1.0
  * @author Daniel Eliasson Stilero Webdesign http://www.stilero.com
@@ -13,20 +14,20 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * 
- * This file is part of viev.html.
+ * This file is part of view.html.
  * 
- * Payhub View is free software: you can redistribute it and/or modify
+ * Klarna View is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Payhub View is distributed in the hope that it will be useful,
+ * Klarna View is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Payhub View.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Klarna View.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
 
@@ -35,20 +36,24 @@ defined('_JEXEC') or die('Restricted access');
  
 // import Joomla view library
 jimport('joomla.application.component.view');
-require_once JPATH_COMPONENT.DS.'helpers'.DS.'PayhubHelper.php';
  
 /**
  * HTML View class for the HelloWorld Component
  */
-class PayhubViewPayhub extends JView{
-    // Overwriting JView display method
-    function display($tpl = null){
-        PayhubHelper::addBootstrapCSS();
-        PayhubHelper::addJqueryJS();
-        PayhubHelper::addBootstrapJS();
-        PayhubHelper::addAdressJS();
-
-        // Display the view
-        parent::display($tpl);
-    }
+class PayhubViewKlarna extends JView
+{
+	// Overwriting JView display method
+	function display($tpl = null) 
+	{
+            //require_once JPATH_COMPONENT.DS.'helpers'.DS.'KlarnaHelper.php';
+            require_once JPATH_COMPONENT.DS.'helpers'.DS.'PayhubHelper.php';
+            $model =& $this->getModel();
+            $personnr = JRequest::getVar('inputPersnr');
+            $layout = 'json-address';
+            JRequest::setVar('layout', $layout);        
+            $adress = $model->getAdress($personnr);
+            $this->adress = $adress;
+            // Display the view
+            parent::display($tpl);
+	}
 }

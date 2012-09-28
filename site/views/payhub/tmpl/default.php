@@ -1,6 +1,6 @@
 <?php
 /**
- * Description of Local_Joomla_2.5
+ * Description of Payhub Default View
  *
  * @version  1.0
  * @author Daniel Eliasson Stilero Webdesign http://www.stilero.com
@@ -15,22 +15,50 @@
  * 
  * This file is part of default.
  * 
- * Local_Joomla_2.5 is free software: you can redistribute it and/or modify
+ * Payhub Default View is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Local_Joomla_2.5 is distributed in the hope that it will be useful,
+ * Payhub Default View is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Local_Joomla_2.5.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Payhub Default View.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
 
 // no direct access
 defined('_JEXEC') or die('Restricted access'); 
 ?>
-yepp
+<form class="form-horizontal">
+    <legend>Fyll i och granska dina uppgifter</legend>
+    <div id="errorContainer"></div>
+    <?php 
+    $user = JFactory::getUser();
+    print PayhubHelper::getInputText('Persnr', 'Personnr./Org.Nummer', 'ÅÅMMDD-NNNN', '410321-9202','medium', FALSE);
+    print PayhubHelper::getInputText('Fnamn', 'Förnamn', 'Förnamn', '','medium', TRUE);
+    print PayhubHelper::getInputText('Enamn', 'Efternamn', 'Efternamn', '','medium', TRUE);
+    print PayhubHelper::getInputText('Email', 'E-post', 'dinmail@adress.se', $user->email,'medium', FALSE, 'email');
+    print PayhubHelper::getInputText('Phone', 'Telefon', '08-1234567');
+    print PayhubHelper::getInputText('Mobile', 'Mobiltelefon', '070-123456');
+    print PayhubHelper::getInputText('Company', 'Företag', 'Företagsnamn (ej privatperson)', '', 'large', TRUE);
+    print PayhubHelper::getInputText('Street', 'Gatuadress', 'Adressgatan 1', '', 'large', TRUE);
+    print PayhubHelper::getInputText('Careof', 'c/o', 'c/o adressen', '', 'large', TRUE);
+    print PayhubHelper::getInputText('Zip', 'Postnummer', '123 45', '', 'small', TRUE);
+    print PayhubHelper::getInputText('City', 'Ort', 'Ort', '','medium', TRUE);
+    print PayhubHelper::getInputText('Country', 'Land', 'Sverige', 'Sverige','medium', TRUE);
+    ?>
+    <div class="control-group">
+        <div class="controls">
+            <button id="btnContinueKlarna" type="submit" class="btn btn-primary">Fortsätt</button>
+        </div>
+    </div>
+    <input name="option" value="com_payhub" type="hidden">
+        <input name="option" value="com_payhub" type="hidden">
+        <input name="view" value="klarna" type="hidden">
+        <input name="task" value="processPayment" type="hidden">
+</form>
+

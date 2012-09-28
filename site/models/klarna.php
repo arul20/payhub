@@ -77,8 +77,8 @@ class PayhubModelKlarna extends JModelItem
 	 */
 	public function getAdress($personNummer) {
             try {
-                $address = $this->Klarna->getAddresses($personNummer);
-                return $address;
+                $addresses = $this->Klarna->getAddresses($personNummer);
+                return $addresses[0]->toArray();
             }catch(Exception $e){
                 JFactory::getApplication()->enqueueMessage( $e->getMessage().' (#'.$e->getCode().')', 'error');
                 return;
