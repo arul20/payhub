@@ -51,8 +51,7 @@ class PayhubViewKlarna extends JView
             $personnr = JRequest::getVar('inputPersnr');
             $layout = 'json-address';
             JRequest::setVar('layout', $layout);        
-            $adress = $model->getAdress($personnr);
-            $this->adress = $adress;
+            $this->adress = $model->getAdress($personnr);
             // Display the view
             parent::display($tpl);
 	}

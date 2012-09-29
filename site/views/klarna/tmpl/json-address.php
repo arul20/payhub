@@ -33,9 +33,9 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 //$adresses = array_map('mb_convert_encoding', $this->adress, array('UTF-8', 'ISO-8859-1'));
-$adresses = array();
-foreach ( $this->adress as $key => $value) {
-    $adresses[$key] = mb_convert_encoding($value, 'UTF-8');
-}
+//$adresses = array();
+//foreach ( $this->adress as $key => $value) {
+//    $adresses[$key] = mb_convert_encoding($value, 'UTF-8');
+//}
 echo json_encode($this->adress);
 ?>

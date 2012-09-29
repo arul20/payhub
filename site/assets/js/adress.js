@@ -1,11 +1,14 @@
 jQuery(function($){
     
     var showAlert = function(){
+        $('#errorContainer').toggle();
         $('<div class="alert alert-block alert-error fade in">'+
             '<a class="close" data-dismiss="alert">&times;</a>'+
             '<h4 class="alert-heading">Person / F&ouml;retag hittas ej</h4>'+
             'Kontrollera personnumret / Org.numret.'+
             '</div>').appendTo('#errorContainer');  
+        $('#errorContainer').fadeIn('slow');
+
     };
     
     /**
@@ -23,7 +26,8 @@ jQuery(function($){
             $('#inputZip').val(data.zip);
             $('#inputCity').val(data.city);
             $('#inputStreet').val(data.street);
-            $('#btnContinueKlarna').text('Jag har granskat');
+            $('#btnContinueKlarna').attr('class', 'btn btn-success');
+            $('#btnContinueKlarna').text('Jag har granskat mina uppgifter');
             $('#btnContinueKlarna').unbind('click');
         }
     };

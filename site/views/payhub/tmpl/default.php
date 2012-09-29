@@ -32,19 +32,20 @@
 
 // no direct access
 defined('_JEXEC') or die('Restricted access'); 
+//JHTML::_('behavior.formvalidation');
+
 ?>
-<form class="form-horizontal">
+<form method="post" class="form-horizontal" class="form-validate" onSubmit="return myValidate(this);">
     <legend>Fyll i och granska dina uppgifter</legend>
-    <div id="errorContainer"></div>
     <?php 
     $user = JFactory::getUser();
-    print PayhubHelper::getInputText('Persnr', 'Personnr./Org.Nummer', 'ÅÅMMDD-NNNN', '410321-9202','medium', FALSE);
-    print PayhubHelper::getInputText('Fnamn', 'Förnamn', 'Förnamn', '','medium', TRUE);
+    print PayhubHelper::getInputText('Persnr', 'Personnr./Org.Nummer', '&Aring;&Aring;MMDD-NNNN', '410321-9202','medium', FALSE);
+    print PayhubHelper::getInputText('Fnamn', 'F&ouml;rnamn', 'F&ouml;rnamn', '','medium', TRUE);
     print PayhubHelper::getInputText('Enamn', 'Efternamn', 'Efternamn', '','medium', TRUE);
     print PayhubHelper::getInputText('Email', 'E-post', 'dinmail@adress.se', $user->email,'medium', FALSE, 'email');
     print PayhubHelper::getInputText('Phone', 'Telefon', '08-1234567');
     print PayhubHelper::getInputText('Mobile', 'Mobiltelefon', '070-123456');
-    print PayhubHelper::getInputText('Company', 'Företag', 'Företagsnamn (ej privatperson)', '', 'large', TRUE);
+    print PayhubHelper::getInputText('Company', 'F&ouml;retag', 'F&ouml;retagsnamn (ej privatperson)', '', 'large', TRUE);
     print PayhubHelper::getInputText('Street', 'Gatuadress', 'Adressgatan 1', '', 'large', TRUE);
     print PayhubHelper::getInputText('Careof', 'c/o', 'c/o adressen', '', 'large', TRUE);
     print PayhubHelper::getInputText('Zip', 'Postnummer', '123 45', '', 'small', TRUE);
@@ -53,12 +54,15 @@ defined('_JEXEC') or die('Restricted access');
     ?>
     <div class="control-group">
         <div class="controls">
-            <button id="btnContinueKlarna" type="submit" class="btn btn-primary">Fortsätt</button>
+            <div id="errorContainer"></div>
+            <button id="btnContinueKlarna" type="submit" class="btn btn-primary">Forts&auml;tt</button>
         </div>
     </div>
     <input name="option" value="com_payhub" type="hidden">
+        <input name="orderId" value="1" type="hidden">
         <input name="option" value="com_payhub" type="hidden">
         <input name="view" value="klarna" type="hidden">
         <input name="task" value="processPayment" type="hidden">
+        <?php echo JHTML::_( 'form.token' ); ?>
 </form>
 

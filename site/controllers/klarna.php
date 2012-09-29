@@ -41,8 +41,7 @@ class PayhubControllerKlarna extends JController{
         $view	= JRequest::getCmd('view', 'default');
         JRequest::setVar('view', $view);        
         $layout = JRequest::getCmd('layout', 'default');
-        JRequest::setVar('layout', $layout);        
-        $id		= JRequest::getInt('id');
+        JRequest::setVar('layout', $layout);
         parent::display();
 
         return $this;
@@ -53,10 +52,6 @@ class PayhubControllerKlarna extends JController{
         JRequest::setVar('view', $view);        
         $layout = JRequest::getCmd('layout', 'address');
         JRequest::setVar('layout', $layout);        
-        $id		= JRequest::getInt('id');
-        //$model =& $this->getModel('klarna');
-        //$mess = $model->getMsg();
-        //$this->assignRef('mess', $mess);
         parent::display();
     }
     
@@ -64,7 +59,9 @@ class PayhubControllerKlarna extends JController{
         $view	= JRequest::getCmd('view', 'default');
         JRequest::setVar('view', $view);        
         $layout = JRequest::getCmd('layout', 'payment');
-        JRequest::setVar('layout', $layout);        
+        JRequest::setVar('layout', $layout); 
+        $task = JRequest::getCmd('task', 'processPayment');
+        JRequest::setVar('task', $task);
         //$model =& $this->getModel('klarna');
         //$mess = $model->getMsg();
         //$this->assignRef('mess', $mess);

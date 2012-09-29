@@ -45,21 +45,30 @@ class PayhubViewKlarna extends JView
 	// Overwriting JView display method
 	function display($tpl = null) 
 	{
-            //require_once JPATH_COMPONENT.DS.'helpers'.DS.'KlarnaHelper.php';
             require_once JPATH_COMPONENT.DS.'helpers'.DS.'PayhubHelper.php';
-            $model =& $this->getModel();
-            $adresses = $model->getAdress('410321-9202');
-            $this->adresses = $adresses;
+            $task = JRequest::getCmd('task');
+            if($task == 'processPayment'){
+                $this->processPayment();
+            }else{
+                $this->getAdress();
+            }
+            
             // Display the view
             parent::display($tpl);
 	}
         
-        function displayPayment($tpl = null){
+        function processPayment($tpl = null){
             require_once JPATH_COMPONENT.DS.'helpers'.DS.'PayhubHelper.php';
             $model =& $this->getModel();
-            $adresses = $model->getAdress('410321-9202');
-            $this->adresses = $adresses;
+            $adresses = $model->addTransaction();
+            //$this->adresses = $adresses;
             // Display the view
             parent::display($tpl);
+        }
+        
+        function getAdress(){
+            $model =& $this->getModel();
+            $adresses = $model->getAdress('410321-9202');
+            $this->adresses = $adresses;  
         }
 }

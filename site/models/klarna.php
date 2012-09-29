@@ -85,7 +85,88 @@ class PayhubModelKlarna extends JModelItem
             }
 	}
         
-        public function addTransaction($articles){
-            
+        public function addTransaction($articles=null){
+            $this->Klarna->addArticle(
+                4,                      // Quantity
+                "MG200MMS",             // Article number
+                "Matrox G200 MMS",      // Article name/title
+                299.99,                 // Price
+                25,                     // 25% VAT
+                0,                      // Discount
+                KlarnaFlags::INC_VAT    // Price is including VAT.
+            );
+            $this->Klarna->addArticle(
+                1,
+                "",
+                "Shipping fee",
+                14.5,
+                25,
+                0,
+                // Price is including VAT and is shipment fee
+                KlarnaFlags::INC_VAT | KlarnaFlags::IS_SHIPMENT
+            );
+            $this->Klarna->addArticle(
+                1,
+                "",
+                "Handling fee",
+                11.5,
+                25,
+                0,
+                // Price is including VAT and is handling/invoice fee
+                KlarnaFlags::INC_VAT | KlarnaFlags::IS_HANDLING
+            );
+            $addr = new KlarnaAddr(
+                'always_approved@klarna.com', // email
+                '',                           // Telno, only one phone number is needed.
+                '0762560000',                 // Cellno
+                'Testperson-se',              // Firstname
+                'Approved',                   // Lastname
+                '',                           // No care of, C/O.
+                'St�rgatan 1',                // Street
+                '12345',                      // Zip Code
+                'Ankeborg',                   // City
+                KlarnaCountry::SE,            // Country
+                null,                         // HouseNo for German and Dutch customers.
+                null                          // House Extension. Dutch customers only.
+            );
+            $this->Klarna->setAddress(KlarnaFlags::IS_BILLING, $addr);  // Billing / invoice address
+            $this->Klarna->setAddress(KlarnaFlags::IS_SHIPPING, $addr); // Shipping / delivery address
+            $this->Klarna->setEstoreInfo(
+                '175012',       // Order ID 1
+                '1999110234',   // Order ID 2
+                ''              // Optional username, email or identifier
+            );
+            $this->Klarna->setComment('A text string stored in the invoice commentary area.');
+            /** Shipment type **/
+            // Normal shipment is defaulted, delays the start of invoice expiration/due-date.
+            $this->Klarna->setShipmentInfo('delay_adjust', KlarnaFlags::EXPRESS_SHIPMENT);
+            try {
+            // Transmit all the specified data, from the steps above, to Klarna.
+            $result = $this->Klarna->addTransaction(
+                '4103219202',             // PNO (Date of birth for DE and NL).
+                null,                   // Gender.
+                KlarnaFlags::NO_FLAG,   // Flags to affect behavior.
+                // -1, notes that this is an invoice purchase, for part payment purchase
+                // you will have a pclass object on which you use getId().
+                KlarnaPClass::INVOICE
+            );
+            // Check the order status
+            if ($result[1] == KlarnaFlags::PENDING) {
+                /* The order is under manual review and will be accepted or denied at a
+                later stage. Use cronjob with checkOrderStatus() or visit Klarna
+                Online to check to see if the status has changed. You should still
+                show it to the customer as it was accepted, to avoid further attempts
+                to fraud.
+                */
+            }
+            // Here we get the invoice number
+            $invno = $result[0];
+            // Order is complete, store it in a database.
+            echo "Status: {$result[1]}\nInvno: {$result[0]}\n";
+            } catch(Exception $e) {
+                // The purchase was denied or something went wrong, print the message:
+                echo "{$e->getMessage()} (#{$e->getCode()})\n";
+                echo $e->getTraceAsString();
+            }
         }
 }

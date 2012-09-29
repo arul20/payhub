@@ -32,5 +32,6 @@
 
 // no direct access
 defined('_JEXEC') or die('Restricted access'); 
-var_dump($this->adresses);
+JRequest::checkToken() or jexit( 'Invalid Token' );
 ?>
+

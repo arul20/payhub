@@ -47,7 +47,7 @@ class PayhubViewPayhub extends JView{
         PayhubHelper::addJqueryJS();
         PayhubHelper::addBootstrapJS();
         PayhubHelper::addAdressJS();
-
+        //PayhubHelper::addFormValidationJS();
         // Display the view
         parent::display($tpl);
     }

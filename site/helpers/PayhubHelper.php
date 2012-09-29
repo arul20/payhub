@@ -30,9 +30,26 @@ class PayhubHelper {
         $document->addScript(JURI::base().'/media/payhub/js/adress.js');
     }
     
+    public static function addFormValidationJS(){
+        $jScript = '<script language="javascript">'.
+            'function myValidate(f) {'.
+                'if (document.formvalidator.isValid(f)) {'.
+                    'f.check.value='.JUtility::getToken().';'.
+                    'return true;'. 
+                '}else {'.
+                    'var msg = "Some values are not acceptable.  Please retry.";'.
+                    'alert(msg);'.
+                '}'.
+                'return false;'.
+            '}'.
+        '</script>';
+        $document =& JFactory::getDocument();
+	$document->addScriptDeclaration($jScript);
+    }
+    
     public static function getInputText($id, $label, $placeholder='', $value='', $size='medium', $disabled=false, $type='text'){
-        $label = htmlentities($label);
-        $placeholder = htmlentities($placeholder);
+        //$label = htmlentities($label);
+        //$placeholder = htmlentities($placeholder);
         $disabled = $disabled ? ' disabled' : '';
         $html = '<div class="control-group">';
         $html .= '<label class="control-label" for="input'.$id.'">'.$label.'</label>';
