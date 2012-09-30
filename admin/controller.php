@@ -4,7 +4,7 @@
  *
  * @version  1.0
  * @author Daniel Eliasson Stilero Webdesign http://www.stilero.com
- * @copyright  (C) 2012-sep-27 Stilero Webdesign, Stilero AB
+ * @copyright  (C) 2012-sep-30 Stilero Webdesign, Stilero AB
  * @category Components
  * @license	GPLv2
  * 
@@ -37,12 +37,63 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controller');
 
 class PayHubController extends JController{
+    
+    public static $modelName = 'items';
+    public static $viewName = 'payhub';
+    
     public function display(){
-//        $view	= JRequest::getCmd('view', 'default');
-//        JRequest::setVar('view', $view);        
-//        $layout = JRequest::getCmd('layout', 'default');
-//        JRequest::setVar('layout', $layout);        
-//        $id		= JRequest::getInt('id');
-        parent::display();
+        //Set Default View and Model
+        $view =& $this->getView( self::$viewName, 'html' );
+        //$model =& $this->getModel(  self::$modelName );
+        //$view->setModel( $model, true );
+        $view->display();
     }
+    
+//    public function edit(){
+//        $cids = JRequest::getVar('cid', null, 'default', 'array');
+//        if( $cids === null ){
+//            JError::raiseError( 500,
+//            'cid parameter missing from the request' );
+//        }
+//        $itemId = (int)$cids[0];
+//        $view =& $this->getView( JRequest::getVar( 'view',  'item' ), 'html' );
+//        $model =& $this->getModel( 'item' );
+//        $view->setModel( $model, true );
+//        $view->edit( $itemId );
+//    }
+//    
+//    function add(){
+//        $view =& $this->getView( JRequest::getVar( 'view',  'item' ), 'html' );
+//        $model =& $this->getModel( 'item' );
+//        $view->setModel( $model, true );
+//        $view->add();
+//    }
+//    
+//    function save(){
+//        $model =& $this->getModel( 'item' );
+//        $model->store();
+//        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar('option').'&task=display');
+//        $this->setRedirect( $redirectTo, 'Saved' );
+//    }
+//    
+//    function apply(){
+//        $model =& $this->getModel( 'item' );
+//        $model->store();
+//    }
+//    
+//    function cancel(){
+//        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar('option').'&task=display');
+//        $this->setRedirect( $redirectTo, 'Cancelled' );
+//    }
+//    
+//    function remove(){
+//        $cids = JRequest::getVar('cid', null, 'default', 'array');
+//        if( $cids === null ){
+//            JError::raiseError( 500, 'Nothing were selected for removal' );
+//        }
+//        $model =& $this->getModel( self::$modelName);
+//        $model->delete( $cids);
+//        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar( 'option' ).'&task=display');
+//        $this->setRedirect( $redirectTo, 'Deleted' );
+//    }
 }

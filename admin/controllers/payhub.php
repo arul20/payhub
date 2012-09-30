@@ -46,6 +46,5 @@ class PayHubControllerPayhub extends JController{
         $id		= JRequest::getInt('id');
         parent::display();
 
-        return $this;
     }
 }

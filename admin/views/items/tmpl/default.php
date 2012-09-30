@@ -4,7 +4,7 @@
  *
  * @version  1.0
  * @author Daniel Eliasson Stilero Webdesign http://www.stilero.com
- * @copyright  (C) 2012-sep-30 Stilero Webdesign, Stilero AB
+ * @copyright  (C) 2012-sep-29 Stilero Webdesign, Stilero AB
  * @category Components
  * @license	GPLv2
  * 
@@ -13,7 +13,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * 
- * This file is part of admin.payhub.
+ * This file is part of item.
  * 
  * PayHub is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,25 +30,18 @@
  * 
  */
 
-// no direct access
-defined('_JEXEC') or die('Restricted access'); 
-
-require_once JPATH_COMPONENT.DS.'controller.php';
-$controller = JRequest::getWord('view');
-
-if ( $controller) { 
-    $path = JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php';
-    if ( file_exists($path)) {
-        require_once $path;
-    } else {       
-        $controller = '';	   
-    }
-}
-$classname    = 'PayHubController'.$controller;
-$controller   = new $classname();
-
-// Perform the Request task
-$controller->execute(JRequest::getCmd('task', 'display'));
- 
-// Redirect if set by the controller
-$controller->redirect();
+// No direct access to this file
+defined('_JEXEC') or die('Restricted access');
+?>
+<?php 
+$headings = array(
+    array('text' => 'Title'),
+    array('width' => '15%', 'text' => 'SKU'),
+    array('width' => '10%', 'text' => 'Price'),
+    array('width' => '8%', 'text' => 'VAT', 'align' =>'center'),
+    array('width' => '5%', 'text' => 'Created', 'align' =>'center')
+);
+print AdminListHelper::getFormListHeader($headings, count($this->items));
+print AdminListHelper::getFormListBody($this->items);
+print AdminListHelper::getForListFooter();
+?>

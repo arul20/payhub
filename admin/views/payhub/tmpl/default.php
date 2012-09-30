@@ -35,20 +35,19 @@ defined('_JEXEC') or die('Restricted access');
 JToolBarHelper::title( JText::_( 'PayHub' ), 'payhub.png' );
 ?>
     <div class="cpanel">
-        <div class="icon-wrapper">
-            <div class="icon">
-                <a href="/joomla_svn25/administrator/index.php?option=com_content&amp;task=article.add">
-                    <img src="/joomla_svn25/administrator/templates/bluestork/images/header/icon-48-article-add.png" alt=""  />
-                    <span>Add New Article</span>
-                </a>
-            </div>
-        </div>
-        <div class="icon-wrapper">
-            <div class="icon">
-                <a href="/joomla_svn25/administrator/index.php?option=com_content&amp;task=article.add">
-                    <img src="/joomla_svn25/administrator/templates/bluestork/images/header/icon-48-article-add.png" alt=""  />
-                    <span>Add New Article</span>
-                </a>
-            </div>
-        </div>
+        <?php DashboardHelper::addButton(
+                '/joomla_svn25/administrator/index.php?option=com_payhub&amp;view=items', 
+                '/joomla_svn25/administrator/templates/bluestork/images/header/icon-48-article.png', 
+                'View Sellable Items'); 
+        ?>
+        <?php DashboardHelper::addButton(
+                '/joomla_svn25/administrator/index.php?option=com_payhub&amp;view=items&amp;task=add', 
+                '/joomla_svn25/administrator/templates/bluestork/images/header/icon-48-article-add.png', 
+                'Add Sellable Item'); 
+        ?>
+        <?php DashboardHelper::addButton(
+                '/joomla_svn25/administrator/index.php?option=com_payhub&amp;view=klarna', 
+                '/joomla_svn25/administrator/templates/bluestork/images/header/icon-48-cpanel.png', 
+                'Add Sellable Item'); 
+        ?>
     </div>

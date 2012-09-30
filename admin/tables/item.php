@@ -4,7 +4,7 @@
  *
  * @version  1.0
  * @author Daniel Eliasson Stilero Webdesign http://www.stilero.com
- * @copyright  (C) 2012-sep-30 Stilero Webdesign, Stilero AB
+ * @copyright  (C) 2012-sep-29 Stilero Webdesign, Stilero AB
  * @category Components
  * @license	GPLv2
  * 
@@ -13,7 +13,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * 
- * This file is part of admin.payhub.
+ * This file is part of item.
  * 
  * PayHub is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,25 +30,18 @@
  * 
  */
 
-// no direct access
-defined('_JEXEC') or die('Restricted access'); 
-
-require_once JPATH_COMPONENT.DS.'controller.php';
-$controller = JRequest::getWord('view');
-
-if ( $controller) { 
-    $path = JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php';
-    if ( file_exists($path)) {
-        require_once $path;
-    } else {       
-        $controller = '';	   
+// No direct access to this file
+defined('_JEXEC') or die('Restricted access');
+ 
+class TableItem extends JTable{
+    var $id = null;
+    var $title = '';
+    var $sku = '';
+    var $price = 0.0;
+    var $vat = '0.0';
+    var $created = '';
+    
+    function __construct( &$db ){
+        parent::__construct('#__payhub_items','id',$db);
     }
 }
-$classname    = 'PayHubController'.$controller;
-$controller   = new $classname();
-
-// Perform the Request task
-$controller->execute(JRequest::getCmd('task', 'display'));
- 
-// Redirect if set by the controller
-$controller->redirect();

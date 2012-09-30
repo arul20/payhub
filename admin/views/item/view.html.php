@@ -4,7 +4,7 @@
  *
  * @version  1.0
  * @author Daniel Eliasson Stilero Webdesign http://www.stilero.com
- * @copyright  (C) 2012-sep-30 Stilero Webdesign, Stilero AB
+ * @copyright  (C) 2012-sep-29 Stilero Webdesign, Stilero AB
  * @category Components
  * @license	GPLv2
  * 
@@ -13,7 +13,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * 
- * This file is part of admin.payhub.
+ * This file is part of view.html.
  * 
  * PayHub is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,25 +30,34 @@
  * 
  */
 
-// no direct access
-defined('_JEXEC') or die('Restricted access'); 
-
-require_once JPATH_COMPONENT.DS.'controller.php';
-$controller = JRequest::getWord('view');
-
-if ( $controller) { 
-    $path = JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php';
-    if ( file_exists($path)) {
-        require_once $path;
-    } else {       
-        $controller = '';	   
+// No direct access to this file
+defined('_JEXEC') or die('Restricted access');
+ 
+// import Joomla view library
+jimport('joomla.application.component.view');
+ 
+/**
+ * HTML View class for the HelloWorld Component
+ */
+class PayHubViewItem extends JView{
+    
+    function edit($id) {
+        JToolBarHelper::title(JText::_('PayHub Item: [<small>Edit</small>]'), 'generic.png');
+        JToolBarHelper::save();
+        JToolBarHelper::cancel('cancel', 'Close');
+        $model =& $this->getModel('item');
+        $item = $model->getItem( $id );
+        $this->assignRef('item', $item);
+        parent::display();
+    }
+    
+    function add(){
+        JToolBarHelper::title( JText::_('PayHub Item').': [<small>Add</small>]' );
+        JToolBarHelper::save();
+        JToolBarHelper::cancel();
+        $model =& $this->getModel();
+        $item = $model->getNewItem();
+        $this->assignRef('item', $item);
+        parent::display();
     }
 }
-$classname    = 'PayHubController'.$controller;
-$controller   = new $classname();
-
-// Perform the Request task
-$controller->execute(JRequest::getCmd('task', 'display'));
- 
-// Redirect if set by the controller
-$controller->redirect();

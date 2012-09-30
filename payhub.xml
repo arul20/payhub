@@ -12,6 +12,7 @@
 	<install>
             <sql>
                 <file driver="mysql" charset="utf8">sql/install.mysql.sql</file>
+                <file driver="mysql">sql/install.mysql.sql</file>
             </sql>
 	</install>
 	<uninstall>

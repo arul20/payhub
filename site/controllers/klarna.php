@@ -62,9 +62,6 @@ class PayhubControllerKlarna extends JController{
         JRequest::setVar('layout', $layout); 
         $task = JRequest::getCmd('task', 'processPayment');
         JRequest::setVar('task', $task);
-        //$model =& $this->getModel('klarna');
-        //$mess = $model->getMsg();
-        //$this->assignRef('mess', $mess);
         parent::display();
     }
 }
