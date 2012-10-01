@@ -36,6 +36,7 @@ defined('_JEXEC') or die('Restricted access');
 // import Joomla modelitem library
 jimport('joomla.application.component.modelitem');
 require_once JPATH_COMPONENT.DS.'helpers'.DS.'KlarnaHelper.php';
+require_once JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'CryptHelper.php';
 KlarnaHelper::loadClasses();
 KlarnaHelper::loadTransportClasses();
  
@@ -57,20 +58,27 @@ class PayhubModelKlarna extends JModelItem
             if (!isset($this->Klarna)){
                 $this->Klarna = new Klarna();
             }
-            $this->Klarna->config(
-                2552,               // Merchant ID
-                'g8wTG5uh7LKaqLl',       // Shared Secret
-                KlarnaCountry::SE,    // Country
-                KlarnaLanguage::SV,   // Language
-                KlarnaCurrency::SEK,  // Currency
-                Klarna::BETA,         // Server
-                'json',               // PClass Storage
-                '/srv/pclasses.json', // PClass Storage URI path
-                true,                 // SSL
-                true                  // Remote logging of response times of xmlrpc calls
-            );
-            $this->Klarna->setCountry('se');
         }
+        
+        public function getSettings(){
+            $db =& JFactory::getDbo();
+            $table = $db->nameQuote('#__payhub_klarna_settings');
+            $query = "SELECT * FROM ".$table;
+            $db->setQuery($query);
+            $settings = $db->loadObject();
+            return $settings;
+        }
+        
+        public function getActiveFees(){
+            $db =& JFactory::getDbo();
+            $published = $db->nameQuote('published');
+            $table = $db->nameQuote('#__payhub_fees');
+            $query = "SELECT * FROM ".$table." WHERE ".$published." = 1";
+            $db->setQuery($query);
+            $fees = $db->loadObjectList();
+            return $fees;
+        }
+        
 	/**
 	 * Get the Adress
 	 * @return string The message to be displayed to the user
@@ -85,36 +93,37 @@ class PayhubModelKlarna extends JModelItem
             }
 	}
         
-        public function addTransaction($articles=null){
-            $this->Klarna->addArticle(
-                4,                      // Quantity
-                "MG200MMS",             // Article number
-                "Matrox G200 MMS",      // Article name/title
-                299.99,                 // Price
-                25,                     // 25% VAT
-                0,                      // Discount
-                KlarnaFlags::INC_VAT    // Price is including VAT.
+        public function setConfig($settings){
+            $this->Klarna->config(
+                $settings->mid,               // Merchant ID
+                CryptHelper::decrypt($settings->shared_secret),       // Shared Secret
+                $settings->country,    // Country
+                $settings->language,   // Language
+                $settings->currency,  // Currency
+                $settings->beta_mode,         // Server
+                'json',               // PClass Storage
+                '/srv/pclasses.json', // PClass Storage URI path
+                $settings->ssl_mode,                 // SSL
+                true                  // Remote logging of response times of xmlrpc calls
             );
-            $this->Klarna->addArticle(
-                1,
-                "",
-                "Shipping fee",
-                14.5,
-                25,
-                0,
-                // Price is including VAT and is shipment fee
-                KlarnaFlags::INC_VAT | KlarnaFlags::IS_SHIPMENT
-            );
-            $this->Klarna->addArticle(
-                1,
-                "",
-                "Handling fee",
-                11.5,
-                25,
-                0,
-                // Price is including VAT and is handling/invoice fee
-                KlarnaFlags::INC_VAT | KlarnaFlags::IS_HANDLING
-            );
+            $this->Klarna->setCountry('se');
+        }
+        
+        public function addFees($fees){
+            foreach ($fees as $fee) {
+                $this->Klarna->addArticle(
+                    1,                      // Quantity
+                    $fee->sku,             // Article number
+                    $fee->title,      // Article name/title
+                    $fee->price,                 // Price
+                    $fee->vat,                     // 25% VAT
+                    0,                      // Discount
+                    KlarnaFlags::INC_VAT    // Price is including VAT.
+                );
+            }
+        }
+        
+        public function setAdress(){
             $addr = new KlarnaAddr(
                 'always_approved@klarna.com', // email
                 '',                           // Telno, only one phone number is needed.
@@ -131,6 +140,19 @@ class PayhubModelKlarna extends JModelItem
             );
             $this->Klarna->setAddress(KlarnaFlags::IS_BILLING, $addr);  // Billing / invoice address
             $this->Klarna->setAddress(KlarnaFlags::IS_SHIPPING, $addr); // Shipping / delivery address
+        }
+        
+        public function addTransaction($articles=null){
+            $this->Klarna->addArticle(
+                4,                      // Quantity
+                "MG200MMS",             // Article number
+                "Matrox G200 MMS",      // Article name/title
+                299.99,                 // Price
+                25,                     // 25% VAT
+                0,                      // Discount
+                KlarnaFlags::INC_VAT    // Price is including VAT.
+            );
+
             $this->Klarna->setEstoreInfo(
                 '175012',       // Order ID 1
                 '1999110234',   // Order ID 2

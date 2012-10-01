@@ -48,6 +48,16 @@ JToolBarHelper::title( JText::_( 'PayHub' ), 'payhub.png' );
         <?php DashboardHelper::addButton(
                 '/joomla_svn25/administrator/index.php?option=com_payhub&amp;view=klarna', 
                 '/joomla_svn25/administrator/templates/bluestork/images/header/icon-48-cpanel.png', 
-                'Add Sellable Item'); 
+                'Klarna Config'); 
+        ?>
+        <?php DashboardHelper::addButton(
+                '/joomla_svn25/administrator/index.php?option=com_payhub&amp;view=fees', 
+                '/joomla_svn25/administrator/templates/bluestork/images/header/icon-48-article.png', 
+                'View Fees'); 
+        ?>
+        <?php DashboardHelper::addButton(
+                '/joomla_svn25/administrator/index.php?option=com_payhub&amp;view=fees&amp;task=add', 
+                '/joomla_svn25/administrator/templates/bluestork/images/header/icon-48-article-add.png', 
+                'Add Fees'); 
         ?>
     </div>

@@ -57,7 +57,7 @@ defined('_JEXEC') or die('Restricted access');
                         </label>
                     </td>
                     <td>
-                        <input class="inputbox" type="text"
+                        <input class="inputbox" type="password"
                         name="shared_secret" id="shared_secret" size="10"
                         value="<?php echo $this->item->shared_secret;?>" />
                     </td>

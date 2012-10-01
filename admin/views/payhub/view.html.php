@@ -36,6 +36,8 @@ defined('_JEXEC') or die('Restricted access');
 // import Joomla view library
 jimport('joomla.application.component.view');
 require_once JPATH_COMPONENT.DS.'helpers'.DS.'DashboardHelper.php'; 
+require_once JPATH_COMPONENT.DS.'helpers'.DS.'PayhubHelper.php'; 
+
 /**
  * HTML View class for the HelloWorld Component
  */
@@ -44,6 +46,7 @@ class PayHubViewPayhub extends JView
 	// Overwriting JView display method
 	function display($tpl = null){
             JHTML::_('behavior.tooltip');
+            PayhubHelper::addSubmenu(JRequest::getWord('view'));
             // Assign data to the view
             $this->msg = 'View.html';
 

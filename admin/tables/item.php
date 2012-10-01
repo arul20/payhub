@@ -34,7 +34,7 @@
 defined('_JEXEC') or die('Restricted access');
  
 class TableItem extends JTable{
-    var $id = null;
+    var $id = 0;
     var $title = '';
     var $sku = '';
     var $price = 0.0;

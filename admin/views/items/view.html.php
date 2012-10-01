@@ -36,7 +36,7 @@ defined('_JEXEC') or die('Restricted access');
 // import Joomla view library
 jimport('joomla.application.component.view');
 require_once JPATH_COMPONENT.DS.'helpers'.DS.'AdminListHelper.php'; 
-
+require_once JPATH_COMPONENT.DS.'helpers'.DS.'PayhubHelper.php'; 
  
 /**
  * HTML View class for the HelloWorld Component
@@ -44,10 +44,11 @@ require_once JPATH_COMPONENT.DS.'helpers'.DS.'AdminListHelper.php';
 class PayHubViewItems extends JView{
     
     function display($tpl = null) {
+        PayhubHelper::addSubmenu(JRequest::getWord('view'));
         JToolBarHelper::title(JText::_('Items', 'generic.png'), 'generic.png');
-        //JToolBarHelper::deleteList();
+        JToolBarHelper::deleteList();
         JToolBarHelper::editListX();
-        //JToolBarHelper::addNewX();
+        JToolBarHelper::addNewX();
         $model =& $this->getModel('items');
         $items =& $model->getItems();
         $this->assignRef('items', $items);

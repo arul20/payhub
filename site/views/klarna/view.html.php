@@ -60,6 +60,11 @@ class PayhubViewKlarna extends JView
         function processPayment($tpl = null){
             require_once JPATH_COMPONENT.DS.'helpers'.DS.'PayhubHelper.php';
             $model =& $this->getModel();
+            $fees = $model->getActiveFees();
+            $settings = $model->getSettings();
+            $model->setConfig($settings);
+            $model->setAdress();
+            $model->addFees($fees);
             $model->addTransaction();
             parent::display($tpl);
         }

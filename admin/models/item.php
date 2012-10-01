@@ -62,7 +62,7 @@ class PayHubModelItem extends JModel{
     
     function getNewItem(){
         $newItem =& $this->getTable( 'item' );
-        $newItem->id = null;
+        $newItem->id = 0;
         return $newItem;
     }
     
@@ -72,6 +72,7 @@ class PayHubModelItem extends JModel{
         jimport('joomla.utilities.date');
         $date = new JDate(JRequest::getVar('created', '', 'post'));
         $data['created'] = $date->toMySQL();
+        $table->reset();
         if(!$table->bind($data)){
             $this->setError($this->_db->getErrorMsg());
             return false;

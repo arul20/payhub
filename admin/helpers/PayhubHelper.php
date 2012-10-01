@@ -4,8 +4,8 @@
  *
  * @version  1.0
  * @author Daniel Eliasson Stilero Webdesign http://www.stilero.com
- * @copyright  (C) 2012-sep-27 Stilero Webdesign, Stilero AB
- * @category Components
+ * @copyright  (C) 2012-okt-01 Stilero Webdesign, Stilero AB
+ * @category Plugins
  * @license	GPLv2
  * 
  * Joomla! is free software. This version may have been modified pursuant
@@ -13,7 +13,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * 
- * This file is part of payhub.
+ * This file is part of PayhubHelper.
  * 
  * PayHub is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,26 +33,33 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access'); 
 
-// import joomla controller library
-jimport('joomla.application.component.controller');
- 
-require_once JPATH_COMPONENT.DS.'controller.php';
-$controller = strtolower(JRequest::getWord('view'));
+class PayhubHelper{
 
-if ( $controller) { 
-    $path = JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php';
-    if ( file_exists($path)) {
-        require_once $path;
-    } else {       
-        $controller = '';	   
+    public static function addSubmenu($vName = 'items'){
+
+            JSubMenuHelper::addEntry(
+                    JText::_('Items'),
+                    'index.php?option=com_payhub&view=items',
+                    ($vName == 'items')
+            );
+
+            JSubMenuHelper::addEntry(
+                    JText::_('Fees'),
+                    'index.php?option=com_payhub&view=fees',
+                    ($vName == 'fees')
+            );
+            
+            JSubMenuHelper::addEntry(
+                    JText::_('Transactions'),
+                    'index.php?option=com_payhub&view=transactions',
+                    ($vName == 'transaction')
+            );
+
+            JSubMenuHelper::addEntry(
+                    JText::_('Settings'),
+                    'index.php?option=com_payhub&view=klarna',
+                    ($vName == 'settings')
+            );
+
     }
 }
-$classname    = 'PayhubController'.ucfirst($controller);
-$controller   = new $classname();
-//$controller->addModelPath( JPATH_ADMINISTRATOR . DS . 
-//        'components' . DS . 'com_payhub' . DS . 'models' );
-// Perform the Request task
-$controller->execute(JRequest::getCmd('task', 'display'));
- 
-// Redirect if set by the controller
-$controller->redirect();

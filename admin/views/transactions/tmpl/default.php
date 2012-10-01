@@ -4,8 +4,8 @@
  *
  * @version  1.0
  * @author Daniel Eliasson Stilero Webdesign http://www.stilero.com
- * @copyright  (C) 2012-sep-27 Stilero Webdesign, Stilero AB
- * @category Components
+ * @copyright  (C) 2012-okt-01 Stilero Webdesign, Stilero AB
+ * @category Plugins
  * @license	GPLv2
  * 
  * Joomla! is free software. This version may have been modified pursuant
@@ -13,7 +13,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * 
- * This file is part of payhub.
+ * This file is part of default.
  * 
  * PayHub is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,27 +32,22 @@
 
 // no direct access
 defined('_JEXEC') or die('Restricted access'); 
-
-// import joomla controller library
-jimport('joomla.application.component.controller');
- 
-require_once JPATH_COMPONENT.DS.'controller.php';
-$controller = strtolower(JRequest::getWord('view'));
-
-if ( $controller) { 
-    $path = JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php';
-    if ( file_exists($path)) {
-        require_once $path;
-    } else {       
-        $controller = '';	   
-    }
-}
-$classname    = 'PayhubController'.ucfirst($controller);
-$controller   = new $classname();
-//$controller->addModelPath( JPATH_ADMINISTRATOR . DS . 
-//        'components' . DS . 'com_payhub' . DS . 'models' );
-// Perform the Request task
-$controller->execute(JRequest::getCmd('task', 'display'));
- 
-// Redirect if set by the controller
-$controller->redirect();
+?>
+<?php 
+$headings = array(
+    array('width' => '5%', 'text' => 'Txn ID'),
+    array('width' => '5%', 'text' => 'Status'),
+    array('width' => '10%', 'text' => 'Date'),
+    array('text' => 'First Name'),
+    array('text' => 'Last Name'),
+    array('text' => 'e-Mail'),
+    array('text' => 'Country'),
+    array('text' => 'Item'),
+    array('text' => 'SKU'),
+    array('width' => '8%', 'text' => 'Gross', 'align' =>'center'),
+    array('width' => '5%', 'text' => 'Tax', 'align' =>'center')
+);
+print AdminListHelper::getFormListHeader($headings, count($this->transactions));
+print AdminListHelper::getFormListBody($this->transactions);
+print AdminListHelper::getForListFooter();
+?>

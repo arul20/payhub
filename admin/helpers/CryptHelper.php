@@ -1,11 +1,11 @@
 <?php
 /**
- * Description of PayHub
+ * CryptHelper helpt crypting strings before storing in db
  *
  * @version  1.0
  * @author Daniel Eliasson Stilero Webdesign http://www.stilero.com
- * @copyright  (C) 2012-sep-27 Stilero Webdesign, Stilero AB
- * @category Components
+ * @copyright  (C) 2012-okt-01 Stilero Webdesign, Stilero AB
+ * @category Plugins
  * @license	GPLv2
  * 
  * Joomla! is free software. This version may have been modified pursuant
@@ -13,7 +13,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * 
- * This file is part of payhub.
+ * This file is part of CryptHelper.
  * 
  * PayHub is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,26 +33,19 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access'); 
 
-// import joomla controller library
-jimport('joomla.application.component.controller');
- 
-require_once JPATH_COMPONENT.DS.'controller.php';
-$controller = strtolower(JRequest::getWord('view'));
-
-if ( $controller) { 
-    $path = JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php';
-    if ( file_exists($path)) {
-        require_once $path;
-    } else {       
-        $controller = '';	   
+class CryptHelper{
+    
+    public static function encrypt($string){
+        $app =& JFactory::getApplication();
+        $key = $app->getCfg('secret');
+        $encrypted = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $string, MCRYPT_MODE_CBC, md5(md5($key))));
+        return $encrypted;
+    }
+    
+    public static function decrypt($string){
+        $app =& JFactory::getApplication();
+        $key = $app->getCfg('secret');
+        $decrypted = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($string), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
+        return $decrypted;
     }
 }
-$classname    = 'PayhubController'.ucfirst($controller);
-$controller   = new $classname();
-//$controller->addModelPath( JPATH_ADMINISTRATOR . DS . 
-//        'components' . DS . 'com_payhub' . DS . 'models' );
-// Perform the Request task
-$controller->execute(JRequest::getCmd('task', 'display'));
- 
-// Redirect if set by the controller
-$controller->redirect();

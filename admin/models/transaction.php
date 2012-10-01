@@ -4,7 +4,7 @@
  *
  * @version  1.0
  * @author Daniel Eliasson Stilero Webdesign http://www.stilero.com
- * @copyright  (C) 2012-sep-30 Stilero Webdesign, Stilero AB
+ * @copyright  (C) 2012-okt-01 Stilero Webdesign, Stilero AB
  * @category Components
  * @license	GPLv2
  * 
@@ -13,7 +13,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * 
- * This file is part of klarna.
+ * This file is part of transaction.
  * 
  * PayHub is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,11 +35,10 @@ defined('_JEXEC') or die('Restricted access');
  
 // import Joomla modelitem library
 jimport('joomla.application.component.model');
-require_once JPATH_COMPONENT.DS.'helpers'.DS.'CryptHelper.php'; 
  
-class PayHubModelKlarna extends JModel{
+class PayHubModelTransaction extends JModel{
     protected $_table;
-    static private $_tableName = '#__payhub_klarna_settings';
+    static private $_tableName = '#__payhub_transactions';
     
     public function __construct() {
         parent::__construct();
@@ -47,25 +46,24 @@ class PayHubModelKlarna extends JModel{
         $this->_table = $db->nameQuote(self::$_tableName);
     }
     
-    public function getKlarna($id){
+    public function getTransaction($id){
         $db =& JFactory::getDbo();
         $key = $db->nameQuote('id');
         $query = "SELECT * FROM ".$this->_table.
                 " WHERE ".$key." = ".$id;
         $db->setQuery($query);
-        $klarna = $db->loadObject();
-        if($klarna === null){
-            JError::raiseError(500, 'Klarna '.$id.' Not found');
+        $transaction = $db->loadObject();
+        if($transaction === null){
+            JError::raiseError(500, 'Transaction '.$id.' Not found');
         }else{
-            $klarna->shared_secret = CryptHelper::decrypt($klarna->shared_secret);
-            return $klarna;
+            return $transaction;
         }
     }
     
-    function getNewKlarna(){
-        $newKlarna =& $this->getTable( 'klarna' );
-        $newKlarna->id = 0;
-        return $newKlarna;
+    function getNewTransaction(){
+        $newTransaction =& $this->getTable( 'transaction' );
+        $newTransaction->id = 0;
+        return $newTransaction;
     }
     
     public function store(){
@@ -74,7 +72,8 @@ class PayHubModelKlarna extends JModel{
         jimport('joomla.utilities.date');
         $date = new JDate(JRequest::getVar('created', '', 'post'));
         $data['created'] = $date->toMySQL();
-        $data['shared_secret'] = CryptHelper::encrypt(JRequest::getVar('shared_secret', '', 'post'));
+        $table->reset();
+        //$table->set('row', $value);
         if(!$table->bind($data)){
             $this->setError($this->_db->getErrorMsg());
             return false;

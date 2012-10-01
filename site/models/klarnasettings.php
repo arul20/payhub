@@ -13,7 +13,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * 
- * This file is part of klarna.
+ * This file is part of klarnas.
  * 
  * PayHub is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,58 +35,22 @@ defined('_JEXEC') or die('Restricted access');
  
 // import Joomla modelitem library
 jimport('joomla.application.component.model');
-require_once JPATH_COMPONENT.DS.'helpers'.DS.'CryptHelper.php'; 
  
-class PayHubModelKlarna extends JModel{
-    protected $_table;
+class PayHubModelKlarnasettings extends JModel{
+    protected $_settings;
+    private $_table;
     static private $_tableName = '#__payhub_klarna_settings';
-    
+
     public function __construct() {
         parent::__construct();
         $db =& JFactory::getDbo();
         $this->_table = $db->nameQuote(self::$_tableName);
     }
-    
-    public function getKlarna($id){
+    public function getSettings(){
         $db =& JFactory::getDbo();
-        $key = $db->nameQuote('id');
-        $query = "SELECT * FROM ".$this->_table.
-                " WHERE ".$key." = ".$id;
+        $query = "SELECT * FROM ".$this->_table;
         $db->setQuery($query);
-        $klarna = $db->loadObject();
-        if($klarna === null){
-            JError::raiseError(500, 'Klarna '.$id.' Not found');
-        }else{
-            $klarna->shared_secret = CryptHelper::decrypt($klarna->shared_secret);
-            return $klarna;
-        }
-    }
-    
-    function getNewKlarna(){
-        $newKlarna =& $this->getTable( 'klarna' );
-        $newKlarna->id = 0;
-        return $newKlarna;
-    }
-    
-    public function store(){
-        $table =& $this->getTable();
-        $data = JRequest::get('post');
-        jimport('joomla.utilities.date');
-        $date = new JDate(JRequest::getVar('created', '', 'post'));
-        $data['created'] = $date->toMySQL();
-        $data['shared_secret'] = CryptHelper::encrypt(JRequest::getVar('shared_secret', '', 'post'));
-        if(!$table->bind($data)){
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
-        if(!$table->check()){
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
-        if(!$table->store()){
-            $this->setError($this->_db->getErrorMsg());
-            return false;
-        }
-        return true;
+        $this->_settings = $db->loadObjectList();
+        return $this->_settings;
     }
 }
