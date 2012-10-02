@@ -36,7 +36,8 @@ defined('_JEXEC') or die('Restricted access');
  
 // import Joomla view library
 jimport('joomla.application.component.view');
- 
+require_once JPATH_COMPONENT.DS.'helpers'.DS.'KlarnaHelper.php';
+KlarnaHelper::loadClasses();
 /**
  * HTML View class for the HelloWorld Component
  */
@@ -61,11 +62,25 @@ class PayhubViewKlarna extends JView
             require_once JPATH_COMPONENT.DS.'helpers'.DS.'PayhubHelper.php';
             $model =& $this->getModel();
             $fees = $model->getActiveFees();
-            $settings = $model->getSettings();
-            $model->setConfig($settings);
-            $model->setAdress();
+            $address = new KlarnaAddr(
+                JRequest::getVar('inputEmail'), // email
+                JRequest::getVar('inputPhone'),                           // Telno, only one phone number is needed.
+                JRequest::getVar('inputMobile'),                 // Cellno
+                JRequest::getVar('inputFnamn'),              // Firstname
+                JRequest::getVar('inputEnamn'),                   // Lastname
+                JRequest::getVar('inputCareof'),                           // No care of, C/O.
+                JRequest::getVar('inputStreet'),                // Street
+                JRequest::getVar('inputZip'),                      // Zip Code
+                JRequest::getVar('inputCity'),                   // City
+                KlarnaCountry::SE,            // Country
+                null,                         // HouseNo for German and Dutch customers.
+                null                          // House Extension. Dutch customers only.
+            );
+            $model->setAdress($address);
             $model->addFees($fees);
-            $model->addTransaction();
+            $itemId = JRequest::getVar('itemId');
+            $personnr = JRequest::getVar('inputPersnr');
+            $model->addTransaction($itemId, $personnr);
             parent::display($tpl);
         }
         

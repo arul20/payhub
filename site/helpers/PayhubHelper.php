@@ -54,7 +54,7 @@ class PayhubHelper {
         $html = '<div class="control-group">';
         $html .= '<label class="control-label" for="input'.$id.'">'.$label.'</label>';
         $html .= '<div class="controls">';
-        $html .= '<input class="input-'.$size.'" type="'.$type.'" id="input'.$id.'" placeholder="'.$placeholder.'" value="'.$value.'"'.$disabled.'>';
+        $html .= '<input class="input-'.$size.'" type="'.$type.'" name="input'.$id.'" id="input'.$id.'" placeholder="'.$placeholder.'" value="'.$value.'"'.$disabled.'>';
         $html .= '</div>';
         $html .= '</div>';
         return $html;

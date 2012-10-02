@@ -43,10 +43,13 @@ require_once JPATH_COMPONENT.DS.'helpers'.DS.'PayhubHelper.php';
 class PayhubViewPayhub extends JView{
     // Overwriting JView display method
     function display($tpl = null){
+        $model =& $this->getModel();
+        $item =& $model->getBillableItem();
         PayhubHelper::addBootstrapCSS();
         PayhubHelper::addJqueryJS();
         PayhubHelper::addBootstrapJS();
         PayhubHelper::addAdressJS();
+        $this->assignRef('item', $item);
         //PayhubHelper::addFormValidationJS();
         // Display the view
         parent::display($tpl);

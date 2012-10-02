@@ -38,13 +38,13 @@ jimport('joomla.application.component.controller');
 
 class PayHubControllerTransactions extends JController{
     
-    public static $modelName = 'transactions';
-    public static $viewName = 'transactions';
+    public static $modelName = 'transaction';
+    public static $viewName = 'transaction';
     
     public function display(){
         //Set Default View and Model
-        $view =& $this->getView( self::$viewName, 'html' );
-        $model =& $this->getModel(  self::$modelName );
+        $view =& $this->getView( self::$viewName.'s', 'html' );
+        $model =& $this->getModel(  self::$modelName.'s' );
         $view->setModel( $model, true );
         $view->display();
     }

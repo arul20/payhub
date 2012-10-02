@@ -35,7 +35,7 @@ defined('_JEXEC') or die('Restricted access');
 //JHTML::_('behavior.formvalidation');
 
 ?>
-<form method="post" class="form-horizontal" class="form-validate" onSubmit="return myValidate(this);">
+<form method="post" class="form-horizontal">
     <legend>Fyll i och granska dina uppgifter</legend>
     <?php 
     $user = JFactory::getUser();
@@ -59,7 +59,7 @@ defined('_JEXEC') or die('Restricted access');
         </div>
     </div>
     <input name="option" value="com_payhub" type="hidden">
-        <input name="orderId" value="1" type="hidden">
+        <input name="itemId" value="<?php print $this->item->id ?>" type="hidden">
         <input name="option" value="com_payhub" type="hidden">
         <input name="view" value="klarna" type="hidden">
         <input name="task" value="processPayment" type="hidden">

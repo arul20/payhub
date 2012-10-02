@@ -48,6 +48,6 @@ class TableTransactions extends JTable{
     var $tax = '';
     
     function __construct( &$db ){
-        parent::__construct('#__payhub_transactionss','id',$db);
+        parent::__construct('#__payhub_transactions','id',$db);
     }
 }

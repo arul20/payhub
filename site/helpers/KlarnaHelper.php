@@ -36,7 +36,9 @@ defined('_JEXEC') or die('Restricted access');
 class KlarnaHelper{
     
     public static function loadClasses(){
-        define('PATH_PAYMENTAPI', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_payhub'.DS.'classes'.DS.'paymentapis'.DS.'klarna'.DS);
+        if(!defined('PATH_PAYMENTAPI')){
+            define('PATH_PAYMENTAPI', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_payhub'.DS.'classes'.DS.'paymentapis'.DS.'klarna'.DS);
+        }
         require_once PATH_PAYMENTAPI.'Country.php';
         require_once PATH_PAYMENTAPI.'Currency.php';
         require_once PATH_PAYMENTAPI.'Encoding.php';

@@ -58,6 +58,7 @@ class PayhubModelKlarna extends JModelItem
             if (!isset($this->Klarna)){
                 $this->Klarna = new Klarna();
             }
+            $this->setConfig();
         }
         
         public function getSettings(){
@@ -67,6 +68,21 @@ class PayhubModelKlarna extends JModelItem
             $db->setQuery($query);
             $settings = $db->loadObject();
             return $settings;
+        }
+        
+        public function getBillableItem($id){
+            $db =& JFactory::getDbo();
+            $table = $db->nameQuote('#__payhub_items');
+            $idKey = $db->nameQuote('id');
+            $idVal = $db->Quote($id);
+            $query = "SELECT * FROM ".$table." WHERE ".$idKey."=".$idVal;
+            $db->setQuery($query);
+            $item = $db->loadObject();
+            if($item === null){
+                JError::raiseError(500, 'Item '.$id.' Not found');
+            }else{
+                return $item;
+            }
         }
         
         public function getActiveFees(){
@@ -93,7 +109,8 @@ class PayhubModelKlarna extends JModelItem
             }
 	}
         
-        public function setConfig($settings){
+        public function setConfig(){
+            $settings = $this->getSettings();
             $this->Klarna->config(
                 $settings->mid,               // Merchant ID
                 CryptHelper::decrypt($settings->shared_secret),       // Shared Secret
@@ -123,32 +140,19 @@ class PayhubModelKlarna extends JModelItem
             }
         }
         
-        public function setAdress(){
-            $addr = new KlarnaAddr(
-                'always_approved@klarna.com', // email
-                '',                           // Telno, only one phone number is needed.
-                '0762560000',                 // Cellno
-                'Testperson-se',              // Firstname
-                'Approved',                   // Lastname
-                '',                           // No care of, C/O.
-                'St�rgatan 1',                // Street
-                '12345',                      // Zip Code
-                'Ankeborg',                   // City
-                KlarnaCountry::SE,            // Country
-                null,                         // HouseNo for German and Dutch customers.
-                null                          // House Extension. Dutch customers only.
-            );
-            $this->Klarna->setAddress(KlarnaFlags::IS_BILLING, $addr);  // Billing / invoice address
-            $this->Klarna->setAddress(KlarnaFlags::IS_SHIPPING, $addr); // Shipping / delivery address
+        public function setAdress($KlarnaAddr){
+            $this->Klarna->setAddress(KlarnaFlags::IS_BILLING, $KlarnaAddr);  // Billing / invoice address
+            $this->Klarna->setAddress(KlarnaFlags::IS_SHIPPING, $KlarnaAddr); // Shipping / delivery address
         }
         
-        public function addTransaction($articles=null){
+        public function addTransaction($itemId, $persNr){
+            $item = $this->getBillableItem($itemId);
             $this->Klarna->addArticle(
-                4,                      // Quantity
-                "MG200MMS",             // Article number
-                "Matrox G200 MMS",      // Article name/title
-                299.99,                 // Price
-                25,                     // 25% VAT
+                1,                      // Quantity
+                $item->sku,             // Article number
+                $item->title,      // Article name/title
+                $item->price,                 // Price
+                $item->vat,                     // 25% VAT
                 0,                      // Discount
                 KlarnaFlags::INC_VAT    // Price is including VAT.
             );
@@ -158,14 +162,14 @@ class PayhubModelKlarna extends JModelItem
                 '1999110234',   // Order ID 2
                 ''              // Optional username, email or identifier
             );
-            $this->Klarna->setComment('A text string stored in the invoice commentary area.');
+            //$this->Klarna->setComment('A text string stored in the invoice commentary area.');
             /** Shipment type **/
             // Normal shipment is defaulted, delays the start of invoice expiration/due-date.
             $this->Klarna->setShipmentInfo('delay_adjust', KlarnaFlags::EXPRESS_SHIPMENT);
             try {
             // Transmit all the specified data, from the steps above, to Klarna.
             $result = $this->Klarna->addTransaction(
-                '4103219202',             // PNO (Date of birth for DE and NL).
+                $persNr,             // PNO (Date of birth for DE and NL).
                 null,                   // Gender.
                 KlarnaFlags::NO_FLAG,   // Flags to affect behavior.
                 // -1, notes that this is an invoice purchase, for part payment purchase
@@ -184,11 +188,76 @@ class PayhubModelKlarna extends JModelItem
             // Here we get the invoice number
             $invno = $result[0];
             // Order is complete, store it in a database.
+            $this->logTransaction($result[0], $result[1], $itemId);
             echo "Status: {$result[1]}\nInvno: {$result[0]}\n";
             } catch(Exception $e) {
                 // The purchase was denied or something went wrong, print the message:
+                $this->logTransaction('', $e->getCode(), $itemId);
                 echo "{$e->getMessage()} (#{$e->getCode()})\n";
-                echo $e->getTraceAsString();
+                //echo $e->getTraceAsString();
+            }
+        }
+        
+        public function logTransaction($txnId, $status, $item){
+            $db =& JFactory::getDbo();
+            $id = $db->nameQuote('id');
+            $transId = $db->nameQuote('txn_id');
+            $payment_status = $db->nameQuote('payment_status');
+            $payment_date = $db->nameQuote('payment_date');
+            $first_name = $db->nameQuote('first_name');
+            $last_name = $db->nameQuote('last_name');
+            $payer_email = $db->nameQuote('payer_email');
+            $residence_country = $db->nameQuote('residence_country');
+            $item_name = $db->nameQuote('item_name');
+            $item_number = $db->nameQuote('item_number');
+            $mc_gross = $db->nameQuote('mc_gross');
+            $tax = $db->nameQuote('tax');
+            $table = $db->nameQuote('#__payhub_transactions');
+            $txnVal = $db->Quote($txnId);
+            $statusVal = $db->Quote($status);
+            jimport('joomla.utilities.date');
+            $date = new JDate();
+            $txnDate = $db->Quote($date->toMySQL());
+            $fName = $db->Quote( JRequest::getVar('inputFName') );
+            $eName = $db->Quote( JRequest::getVar('inputEName'));
+            $email = $db->Quote( JRequest::getVar('inputEmail'));
+            $billableItem = $this->getBillableItem($item);
+            $country = $db->Quote('SE');
+            $itmName = $db->Quote($billableItem->title);
+            $itmSKU = $db->Quote($billableItem->sku);
+            $itmPrice = $db->Quote($billableItem->price);
+            $itmTax = $db->Quote($billableItem->vat);
+            $query = 'INSERT INTO '.$table.'('.
+                    $id.','.
+                    $transId.','.
+                    $payment_status.','.
+                    $payment_date.','.
+                    $first_name.','.
+                    $last_name.','.
+                    $payer_email.','.
+                    $residence_country.','.
+                    $item_name.','.
+                    $item_number.','.
+                    $mc_gross.','.
+                    $tax.
+                    ') VALUES ('.
+                    'NULL'.','.
+                    $txnVal.','.
+                    $statusVal.','.
+                    $txnDate.','.
+                    $fName.','.
+                    $eName.','.
+                    $email.','.
+                    $country.','.
+                    $itmName.','.
+                    $itmSKU.','.
+                    $itmPrice.','.
+                    $itmTax.
+                    ');';
+            $db->setQuery($query);
+            if( !$db->query() ){
+                $errorMsg = $this->getDBO()->getErrorMsg();
+                JError::raiseError(500, 'Error Logging Transaction: '.$errorMsg);
             }
         }
 }
