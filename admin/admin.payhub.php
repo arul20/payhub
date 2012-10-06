@@ -49,6 +49,7 @@ $controller   = new $classname();
 
 // Perform the Request task
 $controller->execute(JRequest::getCmd('task', 'display'));
- 
+JModel::addIncludePath(JPATH_COMPONENT.DS.'models' );
+
 // Redirect if set by the controller
 $controller->redirect();

@@ -69,7 +69,7 @@ class PayHubControllerFees extends JController{
         }
         $model =& $this->getModel( self::$modelName.'s');
         $model->unpublish( $cids);
-        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar( 'option' ).'&task=display');
+        $redirectTo = 'index.php?option='.JRequest::getVar( 'option' ).'&task=display';
         $this->setRedirect( $redirectTo, 'Unpublished' );
     }
     
@@ -80,7 +80,7 @@ class PayHubControllerFees extends JController{
         }
         $model =& $this->getModel( self::$modelName.'s');
         $model->publish( $cids);
-        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar( 'option' ).'&task=display');
+        $redirectTo = 'index.php?option='.JRequest::getVar( 'option' ).'&task=display';
         $this->setRedirect( $redirectTo, 'Published' );
     }
     
@@ -93,7 +93,7 @@ class PayHubControllerFees extends JController{
     
     function save(){
         $this->apply();
-        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar('option').'&task=display');
+        $redirectTo = 'index.php?option='.JRequest::getVar('option').'&task=display';
         $this->setRedirect( $redirectTo, 'Saved' );
     }
     
@@ -103,7 +103,7 @@ class PayHubControllerFees extends JController{
     }
     
     function cancel(){
-        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar('option').'&task=display');
+        $redirectTo = 'index.php?option='.JRequest::getVar('option').'&task=display&view='.JRequest::getVar('view');
         $this->setRedirect( $redirectTo, 'Cancelled' );
     }
     
@@ -112,9 +112,9 @@ class PayHubControllerFees extends JController{
         if( $cids === null ){
             JError::raiseError( 500, 'Nothing were selected for removal' );
         }
-        $model =& $this->getModel( self::$modelName);
+        $model =& $this->getModel( self::$modelName.'s');
         $model->delete( $cids);
-        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar( 'option' ).'&task=display');
+        $redirectTo = 'index.php?option='.JRequest::getVar( 'option' ).'&task=display';
         $this->setRedirect( $redirectTo, 'Deleted' );
     }
 }

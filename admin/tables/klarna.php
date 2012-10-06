@@ -34,7 +34,7 @@
 defined('_JEXEC') or die('Restricted access');
  
 class TableKlarna extends JTable{
-    var $id = null;
+    var $id = 0;
     var $mid = '';
     var $shared_secret = '';
     var $country = '';

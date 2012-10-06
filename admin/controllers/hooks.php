@@ -4,7 +4,7 @@
  *
  * @version  1.0
  * @author Daniel Eliasson Stilero Webdesign http://www.stilero.com
- * @copyright  (C) 2012-okt-01 Stilero Webdesign, Stilero AB
+ * @copyright  (C) 2012-okt-06 Stilero Webdesign, Stilero AB
  * @category Components
  * @license	GPLv2
  * 
@@ -13,7 +13,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * 
- * This file is part of transactions.
+ * This file is part of hooks.
  * 
  * PayHub is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,16 +36,20 @@ defined('_JEXEC') or die('Restricted access');
 // import joomla controller library
 jimport('joomla.application.component.controller');
 
-class PayHubControllerTransactions extends JController{
+class PayHubControllerHooks extends JController{
     
-    public static $modelName = 'transaction';
-    public static $viewName = 'transaction';
+    public static $modelName = 'hooks';
+    public static $viewName = 'hooks';
     
     public function display(){
         //Set Default View and Model
-        $view =& $this->getView( self::$viewName.'s', 'html' );
-        $model =& $this->getModel(  self::$modelName.'s' );
+        $view =& $this->getView( self::$viewName, 'html' );
+        $model =& $this->getModel(  self::$modelName );
+        $paymentModel =& $this->getModel('payments');
+        $actionsModel =& $this->getModel('actions');
         $view->setModel( $model, true );
+        $view->setModel( $paymentModel);
+        $view->setModel( $actionsModel);
         $view->display();
     }
     
@@ -55,23 +59,34 @@ class PayHubControllerTransactions extends JController{
             JError::raiseError( 500,
             'cid parameter missing from the request' );
         }
-        $transactionsId = (int)$cids[0];
-        $view =& $this->getView( self::$viewName , 'html' );
+        $hooksId = (int)$cids[0];
+        $view =& $this->getView( self::$viewName, 'html' );
+        $view->setLayout('edit');
         $model =& $this->getModel( self::$modelName );
+        $paymentModel =& $this->getModel('payments');
+        $actionsModel =& $this->getModel('actions');
         $view->setModel( $model, true );
-        $view->edit( $transactionsId );
+        $view->setModel( $paymentModel);
+        $view->setModel( $actionsModel);
+        $view->edit( $hooksId );
     }
     
     function add(){
-        $view =& $this->getView( JRequest::getVar( 'view',  self::$viewName ), 'html' );
+        $view =& $this->getView( self::$viewName, 'html' );
         $model =& $this->getModel( self::$modelName );
+        $paymentModel =& $this->getModel('payments');
+        $actionsModel =& $this->getModel('actions');
         $view->setModel( $model, true );
+        $view->setModel( $paymentModel);
+        $view->setModel( $actionsModel);
+        $view->setLayout('edit');
+        //JRequest::setVar('layout','edit');
         $view->add();
     }
     
     function save(){
         $this->apply();
-        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar('option').'&task=display');
+        $redirectTo = 'index.php?option='.JRequest::getVar('option').'&task=display&view=hooks';
         $this->setRedirect( $redirectTo, 'Saved' );
     }
     
@@ -81,7 +96,7 @@ class PayHubControllerTransactions extends JController{
     }
     
     function cancel(){
-        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar('option').'&task=display');
+        $redirectTo = 'index.php?option='.JRequest::getVar('option').'&task=display&view='.JRequest::getVar('view');
         $this->setRedirect( $redirectTo, 'Cancelled' );
     }
     
@@ -92,7 +107,7 @@ class PayHubControllerTransactions extends JController{
         }
         $model =& $this->getModel( self::$modelName);
         $model->delete( $cids);
-        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar( 'option' ).'&task=display');
+        $redirectTo = 'index.php?option='.JRequest::getVar( 'option' ).'&task=display&view='.JRequest::getVar('view');
         $this->setRedirect( $redirectTo, 'Deleted' );
     }
 }

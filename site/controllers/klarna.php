@@ -62,8 +62,9 @@ class PayhubControllerKlarna extends JController{
         JRequest::setVar('layout', $layout); 
         $task = JRequest::getCmd('task', 'processPayment');
         JRequest::setVar('task', $task);
-        $itemId = JRequest::getVar('itemId');
+        $itemId = JRequest::getInt('itemId', null);
         JRequest::setVar('itemId', $itemId);
+        
         //$personnr = JRequest::getVar('inputPersnr');
         //JRequest::setVar('inputPersnr', $personnr);
         parent::display();

@@ -94,11 +94,15 @@ defined('_JEXEC') or die('Restricted access');
                         </label>
                     </td>
                     <td>
-                        <?php echo JHTML::_( 'select.booleanlist', 
-                                'published', 
-                                'class="inputbox"', 
-                                $this->fee->published ); 
-                        ?>
+                        <?php
+                        $currentValue = $this->fee->published;
+                        $options = array(
+                            JHTML::_('select.option', 1, JText::_('Yes')),
+                            JHTML::_('select.option', 0, JText::_('No'))
+                        );
+                        print JHTML::_('select.genericlist', $options, 'published', null, 'value', 'text', $currentValue);
+                    ?>
+                       
                     </td>
                 </tr>
                 <tr>

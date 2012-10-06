@@ -50,6 +50,12 @@ class PayhubHelper{
             );
             
             JSubMenuHelper::addEntry(
+                    JText::_('Hooks'),
+                    'index.php?option=com_payhub&view=hooks',
+                    ($vName == 'hooks')
+            );
+            
+            JSubMenuHelper::addEntry(
                     JText::_('Transactions'),
                     'index.php?option=com_payhub&view=transactions',
                     ($vName == 'transaction')

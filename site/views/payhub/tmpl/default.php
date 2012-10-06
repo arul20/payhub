@@ -63,6 +63,12 @@ defined('_JEXEC') or die('Restricted access');
         <input name="option" value="com_payhub" type="hidden">
         <input name="view" value="klarna" type="hidden">
         <input name="task" value="processPayment" type="hidden">
+        <input name="hook" value="<?php print JRequest::getInt('hook'); ?>" type="hidden">
+        <?php
+            $user =& JFactory::getUser();
+            $userid = $user->id;
+        ?>
+        <input name="orderid" value="<?php print $userid; ?>" type="hidden">
         <?php echo JHTML::_( 'form.token' ); ?>
 </form>
 

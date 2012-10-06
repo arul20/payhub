@@ -85,7 +85,7 @@ class AdminListHelper{
             $checked = JHTML::_('grid.id', $i, $row->id );
             $view = JRequest::getVar('view') != '' ? '&view='.JRequest::getVar('view') : '';
             $link = JRoute::_('index.php?option='.JRequest::getVar( 'option' ).$view.'&task=edit&cid[]='.$row->id.'&hidemainmenu=1' );
-            $html = '<tr class="row'.$k.'">';
+            $html .= '<tr class="row'.$k.'">';
             $z = 0;
             foreach ($row as $val){
                 if($z == 1){

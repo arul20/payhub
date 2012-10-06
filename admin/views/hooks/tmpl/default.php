@@ -4,7 +4,7 @@
  *
  * @version  1.0
  * @author Daniel Eliasson Stilero Webdesign http://www.stilero.com
- * @copyright  (C) 2012-sep-27 Stilero Webdesign, Stilero AB
+ * @copyright  (C) 2012-okt-06 Stilero Webdesign, Stilero AB
  * @category Components
  * @license	GPLv2
  * 
@@ -13,7 +13,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  * 
- * This file is part of controller.
+ * This file is part of default.
  * 
  * PayHub is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,21 +30,15 @@
  * 
  */
 
-// no direct access
-defined('_JEXEC') or die('Restricted access'); 
-
-// import joomla controller library
-jimport('joomla.application.component.controller');
-
-class PayHubController extends JController{
-    
-    public function display(){
-        $view	= JRequest::getCmd('view', 'payhub');
-        JRequest::setVar('view', $view);        
-        $layout = JRequest::getCmd('layout', 'default');
-        JRequest::setVar('layout', $layout);        
-        $id		= JRequest::getInt('id');
-        parent::display();
-
-    }
-}
+// No direct access to this file
+defined('_JEXEC') or die('Restricted access');
+?>
+<?php 
+$headings = array(
+    array('text' => 'Payment'),
+    array('text' => 'Action')
+);
+print AdminListHelper::getFormListHeader($headings, count($this->items));
+print AdminListHelper::getFormListBody($this->items);
+print AdminListHelper::getForListFooter();
+?>

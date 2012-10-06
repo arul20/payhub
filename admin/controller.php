@@ -48,52 +48,5 @@ class PayHubController extends JController{
         //$view->setModel( $model, true );
         $view->display();
     }
-    
-//    public function edit(){
-//        $cids = JRequest::getVar('cid', null, 'default', 'array');
-//        if( $cids === null ){
-//            JError::raiseError( 500,
-//            'cid parameter missing from the request' );
-//        }
-//        $itemId = (int)$cids[0];
-//        $view =& $this->getView( JRequest::getVar( 'view',  'item' ), 'html' );
-//        $model =& $this->getModel( 'item' );
-//        $view->setModel( $model, true );
-//        $view->edit( $itemId );
-//    }
-//    
-//    function add(){
-//        $view =& $this->getView( JRequest::getVar( 'view',  'item' ), 'html' );
-//        $model =& $this->getModel( 'item' );
-//        $view->setModel( $model, true );
-//        $view->add();
-//    }
-//    
-//    function save(){
-//        $model =& $this->getModel( 'item' );
-//        $model->store();
-//        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar('option').'&task=display');
-//        $this->setRedirect( $redirectTo, 'Saved' );
-//    }
-//    
-//    function apply(){
-//        $model =& $this->getModel( 'item' );
-//        $model->store();
-//    }
-//    
-//    function cancel(){
-//        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar('option').'&task=display');
-//        $this->setRedirect( $redirectTo, 'Cancelled' );
-//    }
-//    
-//    function remove(){
-//        $cids = JRequest::getVar('cid', null, 'default', 'array');
-//        if( $cids === null ){
-//            JError::raiseError( 500, 'Nothing were selected for removal' );
-//        }
-//        $model =& $this->getModel( self::$modelName);
-//        $model->delete( $cids);
-//        $redirectTo = JRoute::_('index.php?option='.JRequest::getVar( 'option' ).'&task=display');
-//        $this->setRedirect( $redirectTo, 'Deleted' );
-//    }
+
 }
